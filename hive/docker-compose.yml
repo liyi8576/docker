@@ -1,0 +1,38 @@
+version: "2"
+services:
+    hive-server: 
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                HOST_IP: 192.168.100.2
+        hostname: hive-server
+        image: liyi/hive:1.0
+        container_name: hive-server
+        network_mode: hadoop
+        links:
+            - mysql-dev:mysql-dev
+        ports:
+            - "10000:10000"
+            - "10002:10002"
+            - "40022:22"
+        volumes:
+            - /Users/liyi/Develop/docker-volume/files:/home/local
+            - /Users/liyi/Develop/docker-volume/dfs/namenode:/home/hadoop/dfs/namenode
+            - /Users/liyi/Develop/docker-volume/dfs/datanode:/home/hadoop/dfs/datanode
+    mysql-dev:
+        hostname: mysql-dev
+        image: mysql:5.7.18
+        container_name: mysql-dev
+        network_mode: hadoop
+        ports:
+            - "3306:3306"
+        volumes:
+            - /Users/liyi/Develop/docker-volume/mysql-data:/var/lib/mysql 
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        environment:
+            TZ: Asia/Shanghai
+            MYSQL_ROOT_PASSWORD: 8576
+            MYSQL_DATABASE: hive 
+        restart: unless-stopped
+

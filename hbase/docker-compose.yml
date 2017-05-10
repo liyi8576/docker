@@ -1,0 +1,48 @@
+version: "2"
+services:
+    hbase-master:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                HOST_IP: 192.168.100.2 
+                #HOST_IP: 192.168.31.127
+        hostname: hbase-master
+        image: liyi/hbase:1.0
+        container_name: hbase-master
+        network_mode: hadoop
+        command: ["-d","master"]
+        ports:
+            - "60022:22"
+            - "16010:16010"
+        external_links:
+            - zoo1:zoo1
+            - zoo2:zoo2
+            - zoo3:zoo3
+        volumes:
+            - /Users/liyi/Develop/docker-volume/files:/home/local
+    hbase-slave1:
+        hostname: hbase-slave1
+        image: liyi/hbase:1.0
+        container_name: hbase-slave1
+        network_mode: hadoop
+        command: ["-d","regionserver"]
+        external_links:
+            - zoo1:zoo1
+            - zoo2:zoo2
+            - zoo3:zoo3
+        volumes:
+            - /Users/liyi/Develop/docker-volume/files:/home/local
+    hbase-slave2:
+        hostname: hbase-slave2
+        image: liyi/hbase:1.0
+        container_name: hbase-slave2
+        network_mode: hadoop
+        command: ["-d","regionserver"]
+        external_links:
+            - zoo1:zoo1
+            - zoo2:zoo2
+            - zoo3:zoo3
+        volumes:
+            - /Users/liyi/Develop/docker-volume/files:/home/local
+
